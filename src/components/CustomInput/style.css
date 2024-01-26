@@ -1,0 +1,23 @@
+.Input {
+  width: 80%;
+  height: 40px;
+  border-radius: 7px;
+  text-align: center;
+  outline: none;
+  color: black;
+  caret-color: #073144;
+  border: 1px solid #707070;
+  font-size: 14px;
+}
+::placeholder {
+  color: rgb(190, 187, 187);
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  color: rgb(92, 90, 90);
+}
+
+::-ms-input-placeholder {
+  color: rgb(92, 90, 90);
+}

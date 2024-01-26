@@ -1,0 +1,8 @@
+/* Add custom styles */
+.video-player {
+  width: 80%;
+}
+
+.video-player::-webkit-media-controls-enclosure {
+  border-radius: 5px; /* Border radius of the controls */
+}

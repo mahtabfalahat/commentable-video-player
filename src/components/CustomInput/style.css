@@ -11,7 +11,7 @@
 }
 ::placeholder {
   color: rgb(190, 187, 187);
-  opacity: 1; /* Firefox */
+  opacity: 1;
 }
 
 :-ms-input-placeholder {

@@ -4,6 +4,6 @@
     height: 10px;
     background-color: red;
     border-radius: 50%;
-    top: 50%; /* Adjust as needed */
+    top: 50%; 
     transform: translate(-50%, -50%);
   }

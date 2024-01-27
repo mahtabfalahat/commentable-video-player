@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import videojs from "video.js";
 import VideoJS from "./VideoJS/VideoJS";
-import example from "./../../assets/example.mp4";
+import learnVideo from "./../../assets/Media/learnVideo.mp4";
 
 export const VideoPlayer = ({ comments, onTimeUpdate }) => {
   const playerRef = React.useRef(null);
@@ -13,7 +13,7 @@ export const VideoPlayer = ({ comments, onTimeUpdate }) => {
     fluid: true,
     sources: [
       {
-        src: example,
+        src: learnVideo,
         type: "video/mp4",
       },
     ],
@@ -21,7 +21,6 @@ export const VideoPlayer = ({ comments, onTimeUpdate }) => {
 
   const handlePlayerReady = (player) => {
     playerRef.current = player;
-    console.log(playerRef.current);
     player.on("waiting", () => {
       videojs.log("player is waiting");
     });

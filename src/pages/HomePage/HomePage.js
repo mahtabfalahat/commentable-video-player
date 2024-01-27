@@ -1,4 +1,3 @@
-// CommentableVideoPlayer.js
 import React, { useState, useCallback, useMemo } from "react";
 import { formatTime, generateId } from "./../../utils/Utils";
 import { PROXIMITY_THRESHOLD } from "./../../constants/Constants";
@@ -7,7 +6,7 @@ import MainButton from "../../components/CustomButton/CustomButton";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import "./style.css";
 
-const CommentableVideoPlayer = () => {
+const HomePage = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -31,14 +30,14 @@ const CommentableVideoPlayer = () => {
     setNewComment("");
     setShowInput(false);
   };
-  // const memoizedVideoPlayer = useMemo(() => <VideoPlayer onTimeUpdate={handleTimeUpdate} comments={comments} />, [handleTimeUpdate, comments]);
+  const memoizedVideoPlayer = useMemo(() => <VideoPlayer onTimeUpdate={handleTimeUpdate} comments={comments} />, [handleTimeUpdate, comments]);
+
   return (
     <div className="homepage-container">
       <div className="form-container">
         <MainButton btnType="fullWidthBtn" clicked={() => setShowInput(!showInput)}>
           Add Comment at {formatTime(currentTime)}
         </MainButton>
-
         {showInput && (
           <div className="comment-submit-container">
             <CustomInput type="text" placeholder="Enter your comment..." value={newComment} onChange={handleCommentChange} />
@@ -50,15 +49,13 @@ const CommentableVideoPlayer = () => {
       </div>
       <div className="video-player-container">
         <div className="video-box">
-          <VideoPlayer onTimeUpdate={handleTimeUpdate} comments={comments} />
-          {/* {memoizedVideoPlayer} */}
+          {memoizedVideoPlayer}
           <div className="comment-container">
             {comments
               .filter((comment) => Math.abs(comment.timestamp - currentTime) < PROXIMITY_THRESHOLD)
               .map((comment, index) => (
                 <div key={comment.id}>
                   <p>{comment.text}</p>
-                  {/* <small>{formatTime(comment.timestamp)}</small> */}
                 </div>
               ))}
           </div>
@@ -68,4 +65,4 @@ const CommentableVideoPlayer = () => {
   );
 };
 
-export default CommentableVideoPlayer;
+export default HomePage;

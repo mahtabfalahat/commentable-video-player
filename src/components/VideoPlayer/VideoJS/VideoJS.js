@@ -1,5 +1,4 @@
-// VideoJS.js
-import React, { memo, useRef, useEffect } from "react";
+import React, {memo, useRef, useEffect} from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "./style.css";
@@ -8,7 +7,17 @@ export const VideoJS = (props) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const { options, onReady, comments } = props;
-  console.log(comments);
+
+  useEffect(() => {
+    if(playerRef.current){
+      const player = playerRef.current;
+      const times = comments.map((item) => {
+        return item.timestamp
+      });
+      addSeekBarMarkers(player, times);
+    }
+  }, [comments]);
+
   useEffect(() => {
     if (!playerRef.current) {
       const videoElement = document.createElement("video-js");
@@ -17,10 +26,6 @@ export const VideoJS = (props) => {
       const player = (playerRef.current = videojs(videoElement, options, () => {
         videojs.log("player is ready");
         onReady && onReady(player, player.currentTime());
-
-        player.on("loadedmetadata", () => {
-          addSeekBarMarkers(player, [5, 10, 15]);
-        });
 
         player.controlBar.progressControl.seekBar.el().style.backgroundColor = "orange";
         player.width(640);
@@ -45,14 +50,14 @@ export const VideoJS = (props) => {
     } else {
       const player = playerRef.current;
       player.autoplay(options.autoplay);
-      player.src(options.sources);
     }
   }, [options, videoRef, onReady, comments]);
 
   const addSeekBarMarkers = (player, times) => {
     const seekBar = player.controlBar.progressControl.seekBar;
     const progressBar = seekBar.el();
-
+    const existingMarkers = progressBar.querySelectorAll('.custom-seekbar-marker');
+    existingMarkers.forEach(marker => marker.remove());
     times.forEach((time) => {
       const marker = document.createElement("div");
       marker.classList.add("custom-seekbar-marker");

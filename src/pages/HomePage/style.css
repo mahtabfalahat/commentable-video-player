@@ -35,8 +35,16 @@
 }
 .comment-container {
   text-align: left;
-  width: 85%;
-  margin: auto;
+  width: 100%;
+  margin: 20px auto;
+}
+.comment-container > div {
+  background: #e1e1e1;
+  padding: 3px 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: #000;
+  box-sizing: border-box;
 }
 .comment-box {
   display: flex;

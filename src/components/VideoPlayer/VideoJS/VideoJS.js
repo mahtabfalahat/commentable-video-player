@@ -27,8 +27,7 @@ export const VideoJS = (props) => {
           },
         });
         player.el().style.backgroundColor = "lightgray";
-        player.controlBar.progressControl.seekBar.el().style.backgroundColor = "blue";
-        player.bigPlayButton.el().style.backgroundColor = "green";
+        player.bigPlayButton.el().style.backgroundColor = "purple";
         player.controlBar.fullscreenToggle.el().style.backgroundColor = "purple";
         player.controlBar.addChild("Component", {
           text: "Custom Time",

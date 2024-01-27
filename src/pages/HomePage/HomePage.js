@@ -19,6 +19,7 @@ const HomePage = () => {
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
+  
   const handleAddComment = () => {
     const existingComment = comments.find((comment) => Math.abs(comment.timestamp - currentTime) < PROXIMITY_THRESHOLD);
     if (existingComment) {

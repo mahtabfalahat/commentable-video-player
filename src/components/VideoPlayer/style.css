@@ -6,3 +6,12 @@
 .video-player::-webkit-media-controls-enclosure {
   border-radius: 5px; /* Border radius of the controls */
 }
+.custom-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  top: 50%; /* Adjust as needed */
+  transform: translate(-50%, -50%);
+}

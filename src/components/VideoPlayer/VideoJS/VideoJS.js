@@ -1,32 +1,67 @@
 // VideoJS.js
-import React from "react";
+import React, { memo, useRef, useEffect } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
+import "./style.css";
 
 export const VideoJS = (props) => {
-  const videoRef = React.useRef(null);
-  const playerRef = React.useRef(null);
-  const { options, onReady } = props;
-
-  React.useEffect(() => {
+  const videoRef = useRef(null);
+  const playerRef = useRef(null);
+  const { options, onReady, comments } = props;
+  console.log(comments);
+  useEffect(() => {
     if (!playerRef.current) {
       const videoElement = document.createElement("video-js");
       videoElement.classList.add("vjs-big-play-centered");
       videoRef.current.appendChild(videoElement);
       const player = (playerRef.current = videojs(videoElement, options, () => {
         videojs.log("player is ready");
-
-        // Pass the player and initial currentTime to onReady callback
         onReady && onReady(player, player.currentTime());
+
+        player.on("loadedmetadata", () => {
+          addSeekBarMarkers(player, [5, 10, 15]);
+        });
+
+        player.controlBar.progressControl.seekBar.el().style.backgroundColor = "orange";
+        player.width(640);
+        player.height(360);
+        player.controlBar.addChild("Component", {
+          text: "Custom Text",
+          style: {
+            color: "red",
+          },
+        });
+        player.el().style.backgroundColor = "lightgray";
+        player.controlBar.progressControl.seekBar.el().style.backgroundColor = "blue";
+        player.bigPlayButton.el().style.backgroundColor = "green";
+        player.controlBar.fullscreenToggle.el().style.backgroundColor = "purple";
+        player.controlBar.addChild("Component", {
+          text: "Custom Time",
+          style: {
+            color: "orange",
+          },
+        });
       }));
     } else {
       const player = playerRef.current;
       player.autoplay(options.autoplay);
       player.src(options.sources);
     }
-  }, [options, videoRef]);
+  }, [options, videoRef, onReady, comments]);
 
-  React.useEffect(() => {
+  const addSeekBarMarkers = (player, times) => {
+    const seekBar = player.controlBar.progressControl.seekBar;
+    const progressBar = seekBar.el();
+
+    times.forEach((time) => {
+      const marker = document.createElement("div");
+      marker.classList.add("custom-seekbar-marker");
+      marker.style.left = `${(time / player.duration()) * 100}%`;
+      progressBar.appendChild(marker);
+    });
+  };
+
+  useEffect(() => {
     const player = playerRef.current;
     return () => {
       if (player && !player.isDisposed()) {
@@ -43,4 +78,4 @@ export const VideoJS = (props) => {
   );
 };
 
-export default VideoJS;
+export default memo(VideoJS);

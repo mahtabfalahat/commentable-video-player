@@ -1,11 +1,8 @@
-import React, { useState } from "react";
-import { formatTime } from "./../../utils/Utils";
-import {
-  PROXIMITY_THRESHOLD,
-  VIDEO_DURATION,
-} from "./../../constants/Constants";
+// CommentableVideoPlayer.js
+import React, { useState, useCallback, useMemo } from "react";
+import { formatTime, generateId } from "./../../utils/Utils";
+import { PROXIMITY_THRESHOLD } from "./../../constants/Constants";
 import VideoPlayer from "./../../components/VideoPlayer/VideoPlayer";
-import SeekBar from "./../../components/SeekBar/SeekBar";
 import MainButton from "../../components/CustomButton/CustomButton";
 import CustomInput from "../../components/CustomInput/CustomInput";
 import "./style.css";
@@ -16,58 +13,35 @@ const CommentableVideoPlayer = () => {
   const [newComment, setNewComment] = useState("");
   const [showInput, setShowInput] = useState(false);
 
-  const handleTimeUpdate = (time) => {
+  const handleTimeUpdate = useCallback((time) => {
     setCurrentTime(time);
-  };
+  }, []);
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
-
   const handleAddComment = () => {
-    const existingComment = comments.find(
-      (comment) =>
-        Math.abs(comment.timestamp - currentTime) < PROXIMITY_THRESHOLD
-    );
-
+    const existingComment = comments.find((comment) => Math.abs(comment.timestamp - currentTime) < PROXIMITY_THRESHOLD);
     if (existingComment) {
-      const updatedComments = comments.map((comment) =>
-        Math.abs(comment.timestamp - currentTime) < PROXIMITY_THRESHOLD
-          ? { ...comment, text: newComment }
-          : comment
-      );
+      const updatedComments = comments.map((comment) => (Math.abs(comment.timestamp - currentTime) < PROXIMITY_THRESHOLD ? { ...comment, text: newComment } : comment));
       setComments(updatedComments);
     } else {
-      setComments([...comments, { timestamp: currentTime, text: newComment }]);
+      setComments((prevComments) => [...prevComments, { id: generateId(), timestamp: currentTime, text: newComment }]);
     }
-
     setNewComment("");
     setShowInput(false);
   };
-
-  const handleSeek = (percentage) => {
-    const newTime = (percentage / 100) * VIDEO_DURATION;
-    setCurrentTime(newTime);
-  };
-
+  // const memoizedVideoPlayer = useMemo(() => <VideoPlayer onTimeUpdate={handleTimeUpdate} comments={comments} />, [handleTimeUpdate, comments]);
   return (
     <div className="homepage-container">
       <div className="form-container">
-        <MainButton
-          btnType="fullWidthBtn"
-          clicked={() => setShowInput(!showInput)}
-        >
+        <MainButton btnType="fullWidthBtn" clicked={() => setShowInput(!showInput)}>
           Add Comment at {formatTime(currentTime)}
         </MainButton>
 
         {showInput && (
           <div className="comment-submit-container">
-            <CustomInput
-              type="text"
-              placeholder="Enter your comment..."
-              value={newComment}
-              onChange={handleCommentChange}
-            />
+            <CustomInput type="text" placeholder="Enter your comment..." value={newComment} onChange={handleCommentChange} />
             <MainButton btnType="greenBtn" clicked={handleAddComment}>
               Submit Comment
             </MainButton>
@@ -75,22 +49,19 @@ const CommentableVideoPlayer = () => {
         )}
       </div>
       <div className="video-player-container">
-        <VideoPlayer onTimeUpdate={handleTimeUpdate} />
-        <SeekBar
-          currentTime={currentTime}
-          comments={comments}
-          onSeek={handleSeek}
-        />
-        <div className="comment-container">
-          {comments.map((comment, index) => (
-            <div className="comment-box" key={index}>
-              <p className="comment-text-style">{comment.text}</p>
-              <p>on</p>
-              <p className="comment-time-text-style">
-                {formatTime(comment.timestamp)}
-              </p>
-            </div>
-          ))}
+        <div className="video-box">
+          <VideoPlayer onTimeUpdate={handleTimeUpdate} comments={comments} />
+          {/* {memoizedVideoPlayer} */}
+          <div className="comment-container">
+            {comments
+              .filter((comment) => Math.abs(comment.timestamp - currentTime) < PROXIMITY_THRESHOLD)
+              .map((comment, index) => (
+                <div key={comment.id}>
+                  <p>{comment.text}</p>
+                  {/* <small>{formatTime(comment.timestamp)}</small> */}
+                </div>
+              ))}
+          </div>
         </div>
       </div>
     </div>

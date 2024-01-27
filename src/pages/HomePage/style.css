@@ -21,8 +21,15 @@
   align-items: center;
 }
 .video-player-container {
-  height: 85%;
+  height: 65%;
   width: 100%;
+  margin: auto;
+  text-align: center;
+  background-color: #fbfbfb;
+}
+.video-box{
+  height: 80%;
+  width: 90%;
   margin: auto;
   text-align: center;
 }

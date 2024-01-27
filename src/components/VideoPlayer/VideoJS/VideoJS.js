@@ -9,16 +9,6 @@ export const VideoJS = (props) => {
   const { options, onReady, comments } = props;
 
   useEffect(() => {
-    if(playerRef.current){
-      const player = playerRef.current;
-      const times = comments.map((item) => {
-        return item.timestamp
-      });
-      addSeekBarMarkers(player, times);
-    }
-  }, [comments]);
-
-  useEffect(() => {
     if (!playerRef.current) {
       const videoElement = document.createElement("video-js");
       videoElement.classList.add("vjs-big-play-centered");
@@ -49,7 +39,10 @@ export const VideoJS = (props) => {
       }));
     } else {
       const player = playerRef.current;
-      player.autoplay(options.autoplay);
+      const times = comments.map((item) => {
+        return item.timestamp
+      });
+      addSeekBarMarkers(player, times);
     }
   }, [options, videoRef, onReady, comments]);
 
